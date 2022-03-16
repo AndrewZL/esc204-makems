@@ -7,8 +7,6 @@ import time
 import board
 import analogio
 
-print('hi')
-
 # set display to show either ADC output representative integer or the voltage that it represents
 INT_MODE = 0
 VOLT_MODE = 1
