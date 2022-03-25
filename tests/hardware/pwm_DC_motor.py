@@ -7,15 +7,16 @@ import time
 import digitalio
 import pwmio
 import sys
+from adafruit_motor import stepper
 
 # set up logic inputs to motor driver ("step" and "pulse") as outputs
-in1 = digitalio.DigitalInOut(board.D21)
-in2 = digitalio.DigitalInOut(board.D20)
+in1 = digitalio.DigitalInOut(board.D7)
+in2 = digitalio.DigitalInOut(board.D8)
 in1.direction = digitalio.Direction.OUTPUT
 in2.direction = digitalio.Direction.OUTPUT
 
 # set up PWM output to motor driver
-ena = pwmio.PWMOut(board.D19)
+ena = pwmio.PWMOut(board.D11)
 
 # set initial duty cycle, direction, and step commands
 ena.duty_cycle = 0
