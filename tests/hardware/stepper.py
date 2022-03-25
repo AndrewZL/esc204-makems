@@ -2,11 +2,6 @@
 ESC204 2022W Widget Lab 3Mech, Part 6
 Task: Run a stepper motor using the A4988 driver.
 '''
-# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
-# SPDX-License-Identifier: MIT
-
-# Use this example for digital pin control of an H-bridge driver
-# like a DRV8833, TB6612 or L298N.
 
 import time
 import board
