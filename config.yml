@@ -1,3 +1,6 @@
 # put constants here
 # example:
 photoresist_thresh: 300
+grasp:
+  dir1_pin: board.d7
+  dir2_pin: board.d8
