@@ -7,6 +7,7 @@ import mpl_toolkits.mplot3d.axes3d as axes3d
 import matplotlib.tri as mtri
 from matplotlib.ticker import MultipleLocator
 
+
 def surface_to_stl(x, y, z, out_file='bottle.stl'):
     """
     Generates stl 3D model from surface plot.
@@ -22,6 +23,7 @@ def surface_to_stl(x, y, z, out_file='bottle.stl'):
     mesh.z[:] = z[tri.triangles]
     mesh.save(out_file)
 
+
 def surface_revolution_plot(r, length, rate):
     """
     Plots a 3D model of a surface of revolution given a discrete radial array.
@@ -31,15 +33,17 @@ def surface_revolution_plot(r, length, rate):
         length (float): Length along the measurement axis
         rate (float): Rate of data collection along measurement axis
     """
+    # determine parameters
+    dim = len(r)    
+    height = length/rate
+    
     # initialize figure
     fig = plt.figure()
     plt.rcParams["figure.figsize"] = [7.00, 3.50]
     ax = fig.add_subplot(1, 1, 1, projection='3d')
     ax.xaxis.set_major_locator(MultipleLocator(1))
     ax.set_box_aspect((height, np.ptp(r), np.ptp(r))) 
-    # determine parameters
-    dim = len(r)    
-    height = length/rate
+
     # create mesh
     u = [np.linspace(0, height, dim)]
     v = np.linspace(0, 2*np.pi, dim)
@@ -48,7 +52,12 @@ def surface_revolution_plot(r, length, rate):
     X = U
     Y = r*np.cos(V)
     Z = r*np.sin(V)
+    
     # plot
     ax.plot_surface(X, Y, Z, alpha=1, color='gray', rstride=1, cstride=1)
     plt.show()
 
+
+if __name__ == '__main__':
+    r = [2.9,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2.9,2.8,2.7,2.6,2.5,2.4,2.3,2.2,2.1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8,2.9,3,3,3,3,3,3,3,3,3,3,3,3,2.8,2.6,2.4,2.2,2,1.8,1.6,1.4,1.2,1]
+    surface_revolution_plot(r, 10, 2)
