@@ -41,7 +41,7 @@ if __name__ == '__main__':
     step_pin, dirn_pin = init_stepper(board.D2, board.D3, 0.005, 200)
 
     # Initialize Sensing
-    prox_sensor = adafruit_hcsr04.HCSR04(trigger_pin=board.GP2, echo_pin=board.GP3)
+    prox_sensor = adafruit_hcsr04.HCSR04(trigger_pin=board.A1, echo_pin=board.A2)
 
     # Main Loop
     while True:

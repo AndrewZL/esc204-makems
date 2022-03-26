@@ -1,52 +1,56 @@
-'''
-ESC204 2022W Widget Lab 2, Part 10
-Task: Take readings using an ultrasonic sensor.
-'''
-
-# Import libraries needed for blinking the LED
 import board
 import digitalio
+import pwmio
+
+from adafruit_motor import stepper
+import adafruit_hcsr04
+
 import time
+from utils.init import init_dc, init_stepper
 
-# Configure the GPIO input and output for the sensor
-trigger = digitalio.DigitalInOut(board.GP2)
-trigger.direction = digitalio.Direction.OUTPUT
-echo = digitalio.DigitalInOut(board.GP3)
-echo.direction = digitalio.Direction.INPUT
-echo.pull = digitalio.Pull.UP
+import yaml
 
 
-def capture_echo(timeout):
-    #initialize data array and counter
-    data = []
-    i = 0
+def grasp():
+    # continuously run and adjust grasp intensity based on encoder values
+    # once hit good encoder range, run cap off
+    # once cap off is complete, run release
+    def cap_off():
+        pass
+    pass
 
-    # wait for echo from sound bouncing back and timeout if not seen
-    while(not(echo.value) and not(i == timeout)):
-        i+=1
 
-    # if timeout reached, no data collection
-    if i == timeout:
-        print('timeout!')
+def release():
+    pass
 
-    # if timeout not reached, then keep collecting data while echo is nonzero
-    else:
-        while(echo.value):
-            data.append((1,))
 
-    return data
+if __name__ == '__main__':
 
-def plot_data(data):
-    # plot points with pauses in between to avoid overloading
-    for point in data:
-        print(point)
-        time.sleep(0.01)
+    with open('config.yml', 'r') as file:
+        config = yaml.safe_load(file)
+    
+    # Initialize DC Motor Grasp
+    # in1_grasp, in2_grasp, ena_grasp = init_dc(config['grasp']['dir1_pin'], config['grasp']['dir2_pin'], config['grasp']['ena_pin'])
+    in1_grasp, in2_grasp, ena_grasp = init_dc(board.D7, board.D8, board.D11)
+    
+    # Initialize DC Motor Load
+    in1_load, in2_load, ena_load = init_dc(board.D4, board.D5, board.D6)
 
-while True:
-    points = capture_echo(1000)
-    if(len(points) > 0):
-        plot_data(points)
+    # Initialize Stepper Motor Cap Removal
+    # note: 200 is the number of steps per revolution, TODO: put all of this into config later
+    step_pin, dirn_pin = init_stepper(board.D2, board.D3, 0.005, 200)
 
-    # print a low value and wait a second to avoid overloading
-    print((0.001,))
-    time.sleep(1.0)
+    # Initialize Sensing
+    prox_sensor = adafruit_hcsr04.HCSR04(trigger_pin=board.A1, echo_pin=board.A2)
+
+    # Main Loop
+    while True:
+        # while bottle is not present
+        if prox_sensor.distance > config['presence_thresh']:
+            continue
+        else: # bottle is present and close enough to grasp
+            grasp()
+        
+     
+        
+        

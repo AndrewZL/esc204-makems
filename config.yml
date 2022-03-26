@@ -1,6 +1,6 @@
 # put constants here
 # example:
-photoresist_thresh: 300
+presence_thresh: 300
 grasp:
   dir1_pin: board.D7
   dir2_pin: board.D8
