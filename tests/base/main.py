@@ -48,13 +48,12 @@ if __name__ == '__main__':
         # while bottle is not present
         if prox_sensor.distance > config['presence_thresh']:
             continue
-        else:
-            # while bottle is present but farther than threshold
-            while config['presence_thresh'] > prox_sensor.distance > config['prox_thresh']:
-                ena_load.duty_cycle = config['load_speed']
-            # bottle is present and close enough to grasp
+        # while bottle is present but farther than threshold
+        elif config['presence_thresh'] > prox_sensor.distance > config['prox_thresh']:
+            ena_load.duty_cycle = config['load_speed']
+        else: # bottle is present and close enough to grasp
             grasp()
-            
         
+     
         
         
