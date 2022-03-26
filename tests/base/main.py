@@ -1,24 +1,14 @@
-import time
 import board
 import digitalio
 import pwmio
+
 from adafruit_motor import stepper
+import adafruit_hcsr04
+
+import time
 from utils.init import init_dc, init_stepper
 
 import yaml
-
-"""
-def main():
-    while True:
-        if prox_sensor.value within range:
-            grasp()
-            cap_off()
-            release()
-            wait for prox_sensor.value to be out of range
-        else:
-            wait for prox_sensor.value to be in range
-
-"""
 
 
 def grasp():
@@ -30,12 +20,8 @@ def grasp():
     pass
 
 
-
 def release():
     pass
-
-
-
 
 
 if __name__ == '__main__':
@@ -51,25 +37,23 @@ if __name__ == '__main__':
     in1_load, in2_load, ena_load = init_dc(board.D4, board.D5, board.D6)
 
     # Initialize Stepper Motor Cap Removal
-    # note: 200 is the number of steps per revolution
-    # TODO: put all of this into config later
+    # note: 200 is the number of steps per revolution, TODO: put all of this into config later
     step_pin, dirn_pin = init_stepper(board.D2, board.D3, 0.005, 200)
 
     # Initialize Sensing
-    prox_sensor = digitalio.DigitalInOut(board.D5)
+    prox_sensor = adafruit_hcsr04.HCSR04(trigger_pin=board.GP2, echo_pin=board.GP3)
 
     # Main Loop
     while True:
         # while bottle is not present
-        if prox_sensor.value > config['presence_thresh']:
+        if prox_sensor.distance > config['presence_thresh']:
             continue
-        else:
-            # while bottle is present but farther than threshold
-            while config['presence_thresh'] > prox_sensor.value > config['prox_thresh']:
-                ena_load.duty_cycle = config['load_speed']
-            # bottle is present and close enough to grasp
+        # while bottle is present but farther than threshold
+        elif config['presence_thresh'] > prox_sensor.distance > config['prox_thresh']:
+            ena_load.duty_cycle = config['load_speed']
+        else: # bottle is present and close enough to grasp
             grasp()
-            
         
+     
         
         
