@@ -1,9 +1,11 @@
 import time
-from urllib.request import proxy_bypass
 import board
 import adafruit_hcsr04
 
-prox_sensor = adafruit_hcsr04.HCSR04(trigger_pin=board.GP2, echo_pin=board.GP3)
+trig_pin = board.A1
+echo_pin = board.A2
+
+prox_sensor = adafruit_hcsr04.HCSR04(trigger_pin=trig_pin, echo_pin=echo_pin)
 presence = 20
 prox = 5
 
