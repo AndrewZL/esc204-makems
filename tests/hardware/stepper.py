@@ -1,7 +1,7 @@
-'''
-ESC204 2022W Widget Lab 3Mech, Part 6
-Task: Run a stepper motor using the A4988 driver.
-'''
+# Use the stepper motor to close the cap "unscrewer"
+# This proves functionality, and can be re-run as needed to test the mechanical system
+# In later stages, we'll tune the number of rotations to finish removing the cap, 
+# but that's out of scope for this widget lab
 
 import time
 import board
@@ -11,11 +11,6 @@ from adafruit_motor import stepper
 DELAY = 0.005
 STEPS = 200
 
-# You can use any available GPIO pin on both a microcontroller and a Raspberry Pi.
-# The following pins are simply a suggestion. If you use different pins, update
-# the following code to use your chosen pins.
-
-# To use with a Raspberry Pi:
 microstep_pins = (digitalio.DigitalInOut(board.D2),digitalio.DigitalInOut(board.D3),digitalio.DigitalInOut(board.D4))
 step_pin = digitalio.DigitalInOut(board.D5)
 dirn_pin = digitalio.DigitalInOut(board.D6)
@@ -51,6 +46,8 @@ print("Motor spinning CW")
 dirn_pin.value = False
 for i in range(STEPS):
     single_step(DELAY)
+
+
 
 # stop motor
 step_pin.value = False
