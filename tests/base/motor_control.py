@@ -1,39 +1,23 @@
-import time
-import board 
-import digitalio
 
-#  once bottle aligned
-# use gearmotor to 
-
-# gear motor closes on neck
-# then stepper closes on cap
-# and twist to remove
-
-# getting the encoder to work (a side file)
-
-'''
-ESC204 2022W Widget Lab 2, Part 13
-Task: Use PWM to modulate the speed of a DC motor.
-'''
 import board
 import time
 import digitalio
 import pwmio
 import sys
+import analogio
 
 
 dir1_pin = board.D7
 dir2_pin = board.D8
 en_pin = board.D11
 
-encoder_A = board.D18
-encoder_B = board.D17
+encoder_A_pin = board.A2 # yellow
+encoder_B_pin = board.A1 # green
 
-encoder_A.direction = digitalio.Direction.INPUT
-encoder_B.direction = digitalio.Direction.INPUT
 
-encoder_A.pull = digitalio.Pull.UP
-encoder_B.pull = digitalio.Pull.UP
+encoder_B = analogio.AnalogIn(encoder_B_pin)
+encoder_A = analogio.AnalogIn(encoder_A_pin) 
+
 
 in1 = digitalio.DigitalInOut(dir1_pin) # purple
 in2 = digitalio.DigitalInOut(dir2_pin) # white
