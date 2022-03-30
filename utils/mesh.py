@@ -1,11 +1,30 @@
-from stl import mesh
-
 import numpy as np
 
 import matplotlib.pyplot as plt
+from matplotlib import cm, colors
 import mpl_toolkits.mplot3d.axes3d as axes3d
 import matplotlib.tri as mtri
 from matplotlib.ticker import MultipleLocator
+
+
+def label_cmap_gen(x1, x2, height, label_color):
+    """
+    Generates a colormap for the surface of revolution plot.
+    Args:
+        x1 (float): photoresistor position at the bottom of the label
+        x2 (float): photoresistor position at the top of the label
+        height (float): Length along the measurement axis
+        label_color (str): Color of the label
+    """
+    # colours of discrete cmap
+    col = ['grey', label_color, 'grey']
+    # generate discrete cmap
+    cmap = colors.ListedColormap(col)
+    # bounds for discrete normalization
+    bounds = [0, x1, x2, height]
+    # normalize cmap
+    norm = colors.BoundaryNorm(bounds, 3)
+    return cmap, norm
 
 
 def surface_to_stl(x, y, z, out_file='bottle.stl'):
@@ -24,12 +43,14 @@ def surface_to_stl(x, y, z, out_file='bottle.stl'):
     mesh.save(out_file)
 
 
-def surface_revolution_plot(r, length, rate):
+def surface_revolution_plot(r, x1, x2, label_color='red', length=16, rate=2):
     """
     Plots a 3D model of a surface of revolution given a discrete radial array.
     Note: radius = (distance of sensor from central axis) - (depth measurements)
     Args:
-        radius (float array): Measurements of the surface radius 
+        r (float array): Measurements of the surface radius 
+        x1 (float): photoresistor position at the bottom of the label
+        x2 (float): photoresistor position at the top of the label 
         length (float): Length along the measurement axis
         rate (float): Rate of data collection along measurement axis
     """
@@ -53,12 +74,19 @@ def surface_revolution_plot(r, length, rate):
     Y = r*np.cos(V)
     Z = r*np.sin(V)
     
-    # plot
-    ax.plot_surface(X, Y, Z, alpha=1, color='gray', rstride=1, cstride=1)
-    ax.view_init(0,60)
+    # generate label cmap
+    cmap, norm = label_cmap_gen(x1, x2, height, label_color)
+
+    # plot using facecolors for correct axis, use discrete normalization function
+    ax.plot_surface(X, Y, Z, alpha=1, facecolors=cmap(norm(X)), rstride=1, cstride=1)
+    ax.view_init(-60,0)
     plt.show()
 
 
 if __name__ == '__main__':
-    r = [2.8,2.9,3,3,3,3,3,3,3,3,3,3,3,3,3,2.9,2.8,2.7,2.6,2.7,2.8,2.9,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,2.8,2.6,2.4,2.2,2,1.8,1.6,1.4,1.2,1]
-    surface_revolution_plot(r, 16, 2)
+    r = [2.8,2.9,3,3,3,3,3,3,3,3,3,3,3,3,3,2.9,2.8,2.7,2.6,2.7,2.8,2.9,3,3,3,3,3,3,3,3,2.6,2.4,2,1.6,1.2,1,1]
+    x1 = 5
+    x2 = 6.2
+    length = 16
+    rate = 2
+    surface_revolution_plot(r, x1, x2, length=length, rate=rate)
