@@ -8,8 +8,6 @@ import adafruit_hcsr04
 import time
 from utils.init import init_dc, init_stepper
 
-import yaml
-
 
 def grasp():
     # continuously run and adjust grasp intensity based on encoder values

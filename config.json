@@ -1,19 +1,28 @@
 {
-  "presence_thresh": 9,
-  "grasp": {
-      "dir1_pin": "board.D7",
-      "dir2_pin": "board.D8",
-      "ena_pin": "board.D11"
-  },
-  "stepper":{
-      "mstep_pin1": "board.D2",
-      "mstep_pin2": "board.D3",
-      "mstep_pin3": "board.D4",
-      "step_pin": "board.D5",
-      "direction_pin": "board.D6"
-  },
-  "ultrasonic": {
-      "trig_pin": "board.A1",
-      "echo_pin": "board.A2"
-  }
+    "UART": {
+        "M_tx": "board.GP0",
+        "M_rx": "board.GP1",
+        "S_tx": "board.TX",
+        "S_rx": "board.RX",
+        "baud": 9600,
+        "timeout": 0
+    },
+    "grasp_thresh": 3,
+    "presence_thresh": 9,
+    "grasp": {
+        "dir1_pin": "board.D7",
+        "dir2_pin": "board.D8",
+        "ena_pin": "board.D11"
+    },
+    "stepper": {
+        "mstep_pin1": "board.D2",
+        "mstep_pin2": "board.D3",
+        "mstep_pin3": "board.D4",
+        "step_pin": "board.D5",
+        "direction_pin": "board.D6"
+    },
+    "ultrasonic": {
+        "trig_pin": "board.A1",
+        "echo_pin": "board.A2"
+    }
 }
