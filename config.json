@@ -10,19 +10,24 @@
     "grasp_thresh": 3,
     "presence_thresh": 9,
     "grasp": {
-        "dir1_pin": "board.D7",
-        "dir2_pin": "board.D8",
-        "ena_pin": "board.D11"
+        "ena_pin": "board.GP2",
+        "dir1_pin": "board.GP3",
+        "dir2_pin": "board.GP4"
     },
-    "stepper": {
+    "align": {
+        "ena_pin": "board.GP5",
+        "dir1_pin": "board.GP6",
+        "dir2_pin": "board.GP7"
+    },
+    "cap_removal": {
         "mstep_pin1": "board.D2",
         "mstep_pin2": "board.D3",
         "mstep_pin3": "board.D4",
         "step_pin": "board.D5",
         "direction_pin": "board.D6"
     },
-    "ultrasonic": {
-        "trig_pin": "board.A1",
-        "echo_pin": "board.A2"
+    "proximity": {
+        "trig_pin": "board.GP28",
+        "echo_pin": "board.GP27"
     }
 }
