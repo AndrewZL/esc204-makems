@@ -12,7 +12,9 @@
     "grasp": {
         "ena_pin": "board.GP2",
         "dir1_pin": "board.GP3",
-        "dir2_pin": "board.GP4"
+        "dir2_pin": "board.GP4",
+        "encoder_a": "board.GP21",
+        "encoder_b": "board.GP20"
     },
     "align": {
         "ena_pin": "board.GP5",

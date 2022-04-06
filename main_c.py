@@ -21,6 +21,8 @@ with open('config.json', 'r') as file:
 grasper = GraspModule()
 align = AlignModule()
 
+grasper.encoder_test()
+'''
 while True:
     # every step in the process requires "present" from the responder 
     
@@ -41,3 +43,4 @@ while True:
 
 
 
+'''
