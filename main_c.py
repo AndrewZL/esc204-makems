@@ -11,6 +11,8 @@ from align import AlignModule
 
 from utils import comm
 
+# This is the Controller - the Pico
+
 uart = busio.UART(board.GP0, board.GP1, baudrate=9600, timeout=0)
 
 with open('config.json', 'r') as file:

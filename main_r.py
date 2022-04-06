@@ -3,6 +3,8 @@ import board
 import busio
 from scan import ScanModule
 
+# This is the Responder - the Nano
+
 uart = busio.UART(board.TX, board.RX, baudrate=9600, timeout=0)
 UPDATE_INTERVAL = 5
 last_time_sent = 0
