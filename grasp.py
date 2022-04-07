@@ -25,17 +25,6 @@ class GraspModule:
         self.encoder = rotaryio.IncrementalEncoder(eval(config['grasp']['encoder_a']), eval(config['grasp']['encoder_b']))
         self.last_position = 0
 
-    # encoder test
-    def encoder_test(self):
-        speed = 50000
-        self.in1.value, self.in2.value = (True, False)
-        self.ena.duty_cycle = speed
-        for i in range(0,100):
-            print(self.encoder.position, speed)
-            time.sleep(0.25)
-            if i / 4 == i / 4.0:
-                speed = speed - 500
-                self.ena.duty_cycle = speed
 
     # grasp
     def close(self, target_speed):
