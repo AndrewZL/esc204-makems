@@ -1,0 +1,76 @@
+import board 
+import digitalio
+import time
+import analogio
+
+green = digitalio.DigitalInOut(board.D2)
+green.direction = digitalio.Direction.OUTPUT
+blue = digitalio.DigitalInOut(board.D3)
+blue.direction = digitalio.Direction.OUTPUT
+red = digitalio.DigitalInOut(board.D4)
+red.direction = digitalio.Direction.OUTPUT
+
+photoresistor_pin = board.A0
+photoresistor = analogio.AnalogIn(photoresistor_pin)
+
+ADC_HIGH = 65535
+ADC_REF = photoresistor.reference_voltage
+
+ambient = 287.782
+white = 324.703
+black = 205.24
+grey = 119.817
+
+def adc_to_voltage(adc_value):
+    return  ADC_REF * (float(adc_value)/float(ADC_HIGH)) * 100
+
+lights = [red.value, green.value, blue.value]
+rgb = [0, 0, 0]
+col = [0] * 10
+for i in range(3):
+    if red.value:
+        red.value = False
+        green.value = True
+    elif green.value:
+        green.value = False
+        blue.value = True
+    else:
+        red.value = True
+    for j in range(10):
+        col[j] = adc_to_voltage(photoresistor.value,) 
+        time.sleep(0.05)
+    mean = sum(col)/len(col)
+    rgb[i] = (mean - black)/grey * 255
+
+
+print(rgb)
+
+# import time
+# import board
+# import analogio
+# import digitalio
+
+# green = digitalio.DigitalInOut(board.D2)
+# green.direction = digitalio.Direction.OUTPUT
+# blue = digitalio.DigitalInOut(board.D3)
+# blue.direction = digitalio.Direction.OUTPUT
+# red = digitalio.DigitalInOut(board.D4)
+# red.direction = digitalio.Direction.OUTPUT
+
+# photoresistor_pin = board.A0
+# photoresistor = analogio.AnalogIn(photoresistor_pin)
+
+# ADC_HIGH = 65535
+# ADC_REF = photoresistor.reference_voltage
+
+# red.value = True
+# blue.value = True
+# green.value = True
+
+# def adc_to_voltage(adc_value):
+#     return  ADC_REF * (float(adc_value)/float(ADC_HIGH)) * 100
+
+# while True:
+#     print((adc_to_voltage(photoresistor.value,)))    
+#     time.sleep(0.5)
+

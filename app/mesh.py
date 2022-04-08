@@ -17,7 +17,7 @@ def label_cmap_gen(x1, x2, height, label_color):
         label_color (str): Color of the label
     """
     # colours of discrete cmap
-    col = ['grey', label_color, 'grey']
+    col = ['white', label_color, 'white']
     # generate discrete cmap
     cmap = colors.ListedColormap(col)
     # bounds for discrete normalization
@@ -60,10 +60,15 @@ def surface_revolution_plot(r, x1, x2, label_color='red', length=16, rate=2):
     
     # initialize figure
     fig = plt.figure()
-    plt.rcParams["figure.figsize"] = [7.00, 3.50]
+    plt.rcParams["figure.figsize"] = [7.00, 3.5]
+    plt.rcParams["xtick.labelsize"] = 7
+    plt.style.use('dark_background')
+    plt.rcParams["savefig.facecolor"] = "#0E1117"
+    plt.rcParams["axes.facecolor"] = "#0E1117"
+
     ax = fig.add_subplot(1, 1, 1, projection='3d')
-    ax.xaxis.set_major_locator(MultipleLocator(1))
-    ax.set_box_aspect((height, np.ptp(r), np.ptp(r))) 
+
+    ax.set_box_aspect((np.ptp(r), np.ptp(r), height)) 
 
     # create mesh
     u = [np.linspace(0, height, dim)]
@@ -79,8 +84,9 @@ def surface_revolution_plot(r, x1, x2, label_color='red', length=16, rate=2):
 
     # plot using facecolors for correct axis, use discrete normalization function
     ax.plot_surface(X, Y, Z, alpha=1, facecolors=cmap(norm(X)), rstride=1, cstride=1)
-    ax.view_init(-60,0)
+    ax.view_init(20,45,'x')
     plt.show()
+    return fig
 
 
 if __name__ == '__main__':
