@@ -16,7 +16,7 @@ class GraspModule:
         
         # Initialize Stepper Motor Cap Removal
         # note: 200 is the number of steps per revolution, TODO: put all of this into config later
-         # self.step, self.dirn = init_stepper(board.D2, board.D3, 0.005, 200)
+        self.step, self.dirn = init_stepper(board.D2, board.D3, 0.005, 200)
 
         # Initialize Sensing
         # self.prox = adafruit_hcsr04.HCSR04(trigger_pin=board.A1, echo_pin=board.A2)
@@ -31,31 +31,34 @@ class GraspModule:
         time_running = 0
         self.in1.value, self.in2.value = (True, False)
         self.ena.duty_cycle = target_speed
-        last_position = self.encoder.position
+        self.last_position = self.encoder.position
         time.sleep(0.05) # give time for motor to come to speed
         target_encoder_speed = self.encoder.position - last_position 
         # units in encoder are not necessarily units in pwm control, so we can't compare the two. 
         # this assumes that initially, a good speed is attainable
         # if the jam is right away, this method produces garbage
         while True: 
-            speed = self.encoder.position - last_position
+            speed = self.encoder.position - self.last_position
             if speed < target_encoder_speed * 0.01:
                 break
-            last_position = self.encoder.position
+            self.last_position = self.encoder.position
             
             print(self.encoder.position, speed)
             time.sleep(0.05)
 
-            # Mostly for testing
+            # Mostly for testing - if the motor runs too long, we want to stop
             time_running = time_running + 0.05
             if time_running > 2:
                 break
         self.ena.duty_cycle = 0 # stop the motor when we're done
 
     def open(self):
+        # We want to open it all the way - the last_position variable records how much it had to close
         self.in1.value, self.in2.value = (False, True)
         self.ena.duty_cycle = 5000
-        time.sleep(1)
+        while(self.last_position - self.encoder.position > 0):
+            time.sleep(0.05)
+        self.ena.duty_cycle = 0
 
     # removal
     def remove(self, speed):
