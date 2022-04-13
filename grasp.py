@@ -6,17 +6,20 @@ from adafruit_motor import stepper
 import adafruit_hcsr04
 import rotaryio
 
+ccw = True
+
 class GraspModule:
+    
     def __init__(self):
         with open('config.json', 'r') as file:
             config = json.load(file)
     
         # Initialize DC Motor Grasp
         self.in1, self.in2, self.ena = init_dc(eval(config['grasp']['dir1_pin']), eval(config['grasp']['dir2_pin']), eval(config['grasp']['ena_pin']))
-        
+        self.ena.duty_cycle = 0
         # Initialize Stepper Motor Cap Removal
         # note: 200 is the number of steps per revolution, TODO: put all of this into config later
-        self.step, self.dirn = init_stepper(board.D2, board.D3, 0.005, 200)
+        self.step, self.step_dirn = init_stepper(eval(config['cap_removal']['direction_pin']),eval(config['cap_removal']['step_pin']))
 
         # Initialize Sensing
         # self.prox = adafruit_hcsr04.HCSR04(trigger_pin=board.A1, echo_pin=board.A2)
@@ -25,6 +28,20 @@ class GraspModule:
         self.encoder = rotaryio.IncrementalEncoder(eval(config['grasp']['encoder_a']), eval(config['grasp']['encoder_b']))
         self.last_position = 0
 
+    def ping(self):
+        print("ping!")
+    
+    def dostep(self):
+        """
+        Sends a pulse to the STEP output to actuate the stepper motor through one step.
+        """
+        # pulse high to drive step
+        self.step.value = True
+        time.sleep(0.05)
+
+        # bring low in between steps
+        self.step.value = False
+        time.sleep(0.05)
 
     # grasp
     def close(self, target_speed):
@@ -61,9 +78,13 @@ class GraspModule:
         self.ena.duty_cycle = 0
 
     # removal
-    def remove(self, speed):
-        self.step.onestep(direction=stepper.FORWARD, style=stepper.DOUBLE)
-        self.ena.duty_cycle = speed
+    def remove(self):
+        self.step_dirn = ccw
+        for j in range(1, 5):
+            for i in range(1,200):
+                self.dostep()
+            print(j, "rev complete")
+        
         time.sleep(1)
     
     def done_remove(self):
@@ -74,3 +95,6 @@ class GraspModule:
     # sensing
     def get_distance(self):
         return self.prox.distance
+    
+
+   

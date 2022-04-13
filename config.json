@@ -22,11 +22,8 @@
         "dir2_pin": "board.GP7"
     },
     "cap_removal": {
-        "mstep_pin1": "board.D2",
-        "mstep_pin2": "board.D3",
-        "mstep_pin3": "board.D4",
-        "step_pin": "board.D5",
-        "direction_pin": "board.D6"
+        "step_pin": "board.GP9",
+        "direction_pin":  "board.GP8"
     },
     "proximity": {
         "trig_pin": "board.GP28",

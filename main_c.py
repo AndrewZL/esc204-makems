@@ -16,16 +16,21 @@ from utils import comm
 # the Grasper (grippy and unscrewer)
 # the Aligner (roller)
 
+def main():
+    uart = busio.UART(board.GP0, board.GP1, baudrate=9600, timeout=0)
 
-uart = busio.UART(board.GP0, board.GP1, baudrate=9600, timeout=0)
+    with open('config.json', 'r') as file:
+        config = json.load(file)
 
-with open('config.json', 'r') as file:
-    config = json.load(file)
+    grasper = GraspModule()
+    align = AlignModule()
 
-grasper = GraspModule()
-align = AlignModule()
+    grasper.remove()
+    # grasper.close(500)
+    # grasper.open()
 
-grasper.encoder_test()
+if __name__ == '__main__':
+    main()
 '''
 while True:
     # every step in the process requires "present" from the responder 
