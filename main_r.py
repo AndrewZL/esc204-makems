@@ -34,7 +34,7 @@ while True:
         break
 
 # do scanning crap
-
+print('hello')
 
 
 

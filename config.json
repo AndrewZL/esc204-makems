@@ -7,6 +7,7 @@
         "baud": 9600,
         "timeout": 0
     },
+
     "grasp_thresh": 3,
     "presence_thresh": 9,
     "grasp": {
@@ -16,17 +17,28 @@
         "encoder_a": "board.GP21",
         "encoder_b": "board.GP20"
     },
-    "align": {
-        "ena_pin": "board.GP5",
-        "dir1_pin": "board.GP6",
-        "dir2_pin": "board.GP7"
-    },
     "cap_removal": {
         "step_pin": "board.GP9",
-        "direction_pin":  "board.GP8"
+        "direction_pin": "board.GP8"
     },
-    "proximity": {
-        "trig_pin": "board.GP28",
-        "echo_pin": "board.GP27"
-    }
+
+    "align": {
+        "ena_pin": "board.GP7",
+        "dir1_pin": "board.GP5",
+        "dir2_pin": "board.GP6"
+    },
+
+
+    "scan": {
+        "step_pin": "board.A1",
+        "direction_pin": "board.A2"
+    },
+    "presence": {
+        "trig_pin": "board.A1",
+        "echo_pin": "board.A2"
+    },
+    "photoresistor": "board.A0",
+    "r_led": "board.A0",
+    "g_led": "board.A1",
+    "b_led": "board.A2"
 }

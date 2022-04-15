@@ -18,30 +18,14 @@ class GraspModule:
         self.in1, self.in2, self.ena = init_dc(eval(config['grasp']['dir1_pin']), eval(config['grasp']['dir2_pin']), eval(config['grasp']['ena_pin']))
         self.ena.duty_cycle = 0
         # Initialize Stepper Motor Cap Removal
-        # note: 200 is the number of steps per revolution, TODO: put all of this into config later
-        self.step, self.step_dirn = init_stepper(eval(config['cap_removal']['direction_pin']),eval(config['cap_removal']['step_pin']))
-
+        self.step, self.dir = init_stepper(eval(config['cap_removal']['step_pin']), eval(config['cap_removal']['direction_pin']))
+        
         # Initialize Sensing
         # self.prox = adafruit_hcsr04.HCSR04(trigger_pin=board.A1, echo_pin=board.A2)
 
         # Initialize Encoder
         self.encoder = rotaryio.IncrementalEncoder(eval(config['grasp']['encoder_a']), eval(config['grasp']['encoder_b']))
         self.last_position = 0
-
-    def ping(self):
-        print("ping!")
-    
-    def dostep(self):
-        """
-        Sends a pulse to the STEP output to actuate the stepper motor through one step.
-        """
-        # pulse high to drive step
-        self.step.value = True
-        time.sleep(0.05)
-
-        # bring low in between steps
-        self.step.value = False
-        time.sleep(0.05)
 
     # grasp
     def close(self, target_speed):
@@ -50,7 +34,7 @@ class GraspModule:
         self.ena.duty_cycle = target_speed
         self.last_position = self.encoder.position
         time.sleep(0.05) # give time for motor to come to speed
-        target_encoder_speed = self.encoder.position - last_position 
+        target_encoder_speed = self.encoder.position - self.last_position 
         # units in encoder are not necessarily units in pwm control, so we can't compare the two. 
         # this assumes that initially, a good speed is attainable
         # if the jam is right away, this method produces garbage
@@ -78,23 +62,34 @@ class GraspModule:
         self.ena.duty_cycle = 0
 
     # removal
-    def remove(self):
-        self.step_dirn = ccw
-        for j in range(1, 5):
-            for i in range(1,200):
-                self.dostep()
-            print(j, "rev complete")
-        
-        time.sleep(1)
+    def remove(self):      
+        def single_step(d):
+            """
+            Sends a pulse to the STEP output to actuate the stepper motor through one step.
+            """
+            # pulse high to drive step
+            self.step.value = True
+            time.sleep(d)
+
+            # bring low in between steps
+            self.step.value = False
+            time.sleep(d)
+        # run one revolution CCW
+        print("Motor spinning CCW")
+        self.dir.value = True
+        for i in range(200):
+            single_step(0.005)
+        # stop motor
+        self.step.value = False
     
     def done_remove(self):
         self.step.onestep(direction=stepper.BACKWARD, style=stepper.DOUBLE)
         self.ena.duty_cycle = 5000
         time.sleep(1)
     
-    # sensing
-    def get_distance(self):
-        return self.prox.distance
+    # # sensing
+    # def get_distance(self):
+    #     return self.prox.distance
     
 
    

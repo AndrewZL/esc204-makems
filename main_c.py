@@ -25,31 +25,32 @@ def main():
     grasper = GraspModule()
     align = AlignModule()
 
-    grasper.remove()
-    # grasper.close(500)
-    # grasper.open()
+    while True:
+    # every step in the process requires "present" from the responder 
+    
+        message = comm.read(uart)
+        if message is not "present":
+            continue
+        
+        align.load(50000)
+
+        grasper.close()
+        grasper.remove()
+
+        uart.write(bytes("a", "ascii"))
+
+        align.unload()
 
 if __name__ == '__main__':
     main()
-'''
-while True:
-    # every step in the process requires "present" from the responder 
-    
-    message = comm.read(uart)
-    if message is not "present":
-        continue
-      
-    
-    # scan has detected bottle
-    while grasper.get_distance() > 10:
-        align.load()
-
-    # bottle in position for grasping
-    grasper.close()
-    grasper.remove()
-
-    uart.write(bytes("a", "ascii"))
 
 
+# PI 0
 
-'''
+
+uart = busio.UART(board.GP0, board.GP1, baudrate=9600, timeout=0)
+
+comm.read(uart)
+uart.write(bytearray('z'))
+print('Bottle Present, begin processing')
+

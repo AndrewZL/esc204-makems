@@ -7,21 +7,12 @@ import time
 import board
 import digitalio
 from adafruit_motor import stepper
+from utils.init import init_stepper
 
 DELAY = 0.005
 STEPS = 200
 
-microstep_pins = (digitalio.DigitalInOut(board.D2),digitalio.DigitalInOut(board.D3),digitalio.DigitalInOut(board.D4))
-step_pin = digitalio.DigitalInOut(board.D5)
-dirn_pin = digitalio.DigitalInOut(board.D6)
-
-step_pin.direction = digitalio.Direction.OUTPUT
-dirn_pin.direction = digitalio.Direction.OUTPUT
-
-# set motor to run with full steps (not microsteps)
-for pin in microstep_pins:
-    pin.direction = digitalio.Direction.OUTPUT
-    pin.value = False
+step_pin, dirn_pin = init_stepper(board.GP9, board.GP8)
 
 def single_step(d):
     """

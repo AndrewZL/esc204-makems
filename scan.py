@@ -13,7 +13,7 @@ class ScanModule:
             config = json.load(file)
 
         # Initialize Stepper Slider 
-        self.step, self.dirn = init_stepper(board.D2, board.D3, 0.005, 200)
+        self.step, self.dirn = init_stepper(board.D2, board.D3)
 
         # Initialize Sensing
         self.pres = adafruit_hcsr04.HCSR04(trigger_pin=board.A1, echo_pin=board.A2)
@@ -22,16 +22,34 @@ class ScanModule:
         self.photoresistor = analogio.AnalogIn(board.A0) 
         self.ADC_REF = self.photoresistor.reference_voltage
 
+    def single_step(self, d):
+        """
+        Sends a pulse to the STEP output to actuate the stepper motor through one step.
+        """
+        # pulse high to drive step
+        self.step.value = True
+        time.sleep(d)
+
+        # bring low in between steps
+        self.step.value = False
+        time.sleep(d)
+
     # slider
     def left(self, speed):
-        self.step.onestep(direction=stepper.FORWARD, style=stepper.DOUBLE)
-        self.ena.duty_cycle = speed
-        time.sleep(1)
-    
+        print("Motor spinning CCW")
+        self.dirn.value = True
+        for i in range(200):
+            self.single_step(0.005)
+        # stop motor
+        self.step.value = False
+        
     def right(self):
-        self.step.onestep(direction=stepper.BACKWARD, style=stepper.DOUBLE)
-        self.ena.duty_cycle = 5000
-        time.sleep(1)
+        print("Motor spinning CCW")
+        self.dirn.value = False
+        for i in range(200):
+            self.single_step(0.005)
+        # stop motor
+        self.step.value = False
     
     # sensing
     def get_distance(self):

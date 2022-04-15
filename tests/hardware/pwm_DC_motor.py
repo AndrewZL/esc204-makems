@@ -31,9 +31,13 @@ time_limit = 9
 for i in range(4):
     # rotate motor clockwise
     in1.value, in2.value = (False, True)
-    # ena.duty_cycle = 40000
+    ena.duty_cycle = 50000
     print("Motor is rotating CW")
     time.sleep(1)
+    
+    # stop 
+    ena.duty_cycle = 0
+    time.sleep(5)
 
     # rotate motor counterclockwise
     in1.value, in2.value = (True, False)
