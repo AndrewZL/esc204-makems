@@ -1,40 +1,50 @@
+# Nano - Responder
+
 import time
 import board
 import busio
-from scan import ScanModule
+import adafruit_hcsr04
 
-# This is the Responder - the Nano
+from scan import ScanModule
+from utils import comm
+
 
 uart = busio.UART(board.TX, board.RX, baudrate=9600, timeout=0)
+sonar = adafruit_hcsr04.HCSR04(trigger_pin=board.A1, echo_pin=board.A0)
+scanner = ScanModule()
+
 UPDATE_INTERVAL = 5
 last_time_sent = 0
 
-scan = ScanModule()
+while True:
+    try:
+        now = time.monotonic()
+        ultrasonic_distance = sonar.distance
+        if now - last_time_sent >= UPDATE_INTERVAL:
+            message = "{:.2f}".format(ultrasonic_distance)        
+            uart.write(bytes("<R,"+message+">", "ascii"))
+            if comm.signal(uart):
+                print("Signal received, bottle present")
+                break
+            last_time_sent = now
+    
+    except:
+        print("smth wrong idk")
 
-detection = False
+time.sleep(5)
 
 while True:
-    dist = scan.get_distance()
-    now = time.monotonic()
-    if dist < 10 and detection and now - last_time_sent >= UPDATE_INTERVAL:
-        print("<present>")
-        uart.write(bytes("present", "ascii"))
-        break
-    if dist < 10:
-        detection = True
-    time.sleep(0.1)
+    try:
+        if comm.signal(uart):
+            print("Signal received, begin scanning")
+            break
+    except:
+        print("smth wrong idk")
 
-time.sleep(10)
+# do scan
 
-while True:
-    byte_read = uart.read(1)
-    if byte_read is None:
-        continue
-    else:
-        break
+scanner.left()
+scanner.right()
 
-# do scanning crap
-print('hello')
-
-
+uart.write(bytes("<R,done scan>", "ascii"))
 

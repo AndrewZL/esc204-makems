@@ -16,6 +16,14 @@ from utils import comm
 # the Grasper (grippy and unscrewer)
 # the Aligner (roller)
 
+
+def present(uart):
+    message = comm.read(uart)
+    while message is not "present":
+        time.sleep(5)
+        message = comm.read(uart)
+
+
 def main():
     uart = busio.UART(board.GP0, board.GP1, baudrate=9600, timeout=0)
 
@@ -25,32 +33,28 @@ def main():
     grasper = GraspModule()
     align = AlignModule()
 
-    while True:
     # every step in the process requires "present" from the responder 
     
+    present()
+    align.load(50000)
+
+    present()
+    grasper.close()
+    
+    present()
+    grasper.remove()
+    
+    present()
+    uart.write(bytearray('z'))
+    print('Bottle Done Pre-Processing, Begin Scan')
+
+    message = comm.read(uart)
+    while message is not "done scan":
+        time.sleep(5)
         message = comm.read(uart)
-        if message is not "present":
-            continue
-        
-        align.load(50000)
 
-        grasper.close()
-        grasper.remove()
-
-        uart.write(bytes("a", "ascii"))
-
-        align.unload()
+    align.unload()
+    
 
 if __name__ == '__main__':
     main()
-
-
-# PI 0
-
-
-uart = busio.UART(board.GP0, board.GP1, baudrate=9600, timeout=0)
-
-comm.read(uart)
-uart.write(bytearray('z'))
-print('Bottle Present, begin processing')
-

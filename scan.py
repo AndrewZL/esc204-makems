@@ -35,7 +35,7 @@ class ScanModule:
         time.sleep(d)
 
     # slider
-    def left(self, speed):
+    def left(self):
         print("Motor spinning CCW")
         self.dirn.value = True
         for i in range(200):
