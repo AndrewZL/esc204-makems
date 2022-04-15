@@ -14,8 +14,8 @@
         "ena_pin": "board.GP2",
         "dir1_pin": "board.GP3",
         "dir2_pin": "board.GP4",
-        "encoder_a": "board.GP21",
-        "encoder_b": "board.GP20"
+        "encoder_a": "board.GP15",
+        "encoder_b": "board.GP14"
     },
     "cap_removal": {
         "step_pin": "board.GP9",
