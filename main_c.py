@@ -23,6 +23,16 @@ def present(uart):
         time.sleep(5)
         message = comm.read(uart)
 
+def setup():
+    grasper = GraspModule()
+    align = AlignModule()
+
+    return grasper, align
+def test():
+    grasper, align = setup()
+    # grasper.remove()
+   #  grasper.close(45000)
+    grasper.controlled_move(45000,False)
 
 def main():
     uart = busio.UART(board.GP0, board.GP1, baudrate=9600, timeout=0)
@@ -39,11 +49,16 @@ def main():
     align.load(50000)
 
     present()
-    grasper.close()
+    grasper.close(45000)
     
     present()
-    grasper.remove()
+    grasper.remove_cap()
     
+    present()
+    grasper.done_remove_cap()
+
+    present()
+    grasper.open()
     present()
     uart.write(bytearray('z'))
     print('Bottle Done Pre-Processing, Begin Scan')
