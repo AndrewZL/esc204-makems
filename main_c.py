@@ -45,21 +45,26 @@ def main():
 
     # every step in the process requires "present" from the responder 
     
-    present()
-    align.load(50000)
+    # present()
+    # align.load(50000)
 
-    present()
+    # present()
     grasper.close(45000)
-    
-    present()
-    grasper.remove_cap()
-    
-    present()
-    grasper.done_remove_cap()
+    print("closed")
 
-    present()
-    grasper.open()
-    present()
+    # present()
+    grasper.remove_cap()
+    print("cap removed")
+
+    # present()
+    grasper.done_remove_cap()
+    print("allowing cap to fall")
+
+    # present()
+    grasper.open(45000)
+    print("opened")
+
+    # present()
     uart.write(bytearray('z'))
     print('Bottle Done Pre-Processing, Begin Scan')
 

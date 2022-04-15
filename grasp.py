@@ -28,7 +28,7 @@ class GraspModule:
         self.encoder = rotaryio.IncrementalEncoder(eval(config['grasp']['encoder_a']), eval(config['grasp']['encoder_b']))
         self.last_position = 0
     
-    def single_step(d):
+    def single_step(self,d):
             """
             Sends a pulse to the STEP output to actuate the stepper motor through one step.
             """
@@ -66,16 +66,21 @@ class GraspModule:
             if time_running > 2:
                 break
         self.ena.duty_cycle = 0 # stop the motor when we're done
+        print("total distance", self.last_position)
 
     # grasp
     def close(self, target_speed):
         self.controlled_move(target_speed=target_speed)
 
-    def open(self):
+    def open(self,target_speed):
         # We want to open it all the way - the last_position variable records how much it had to close
         self.in1.value, self.in2.value = (False, True)
-        self.ena.duty_cycle = 5000
-        while(self.last_position - self.encoder.position > 0):
+        self.ena.duty_cycle = target_speed
+        time.sleep(0.05 * 10) # give time for motor to come to speed
+        target_encoder_speed = abs((self.encoder.position - self.last_position)/10)
+        while(self.encoder.position) < self.last_position * 2 and speed > target_encoder_speed * 0.01:
+            print(self.encoder.position, self.last_position)
+            speed = abs(self.encoder.position - self.last_position)
             time.sleep(0.05)
         self.ena.duty_cycle = 0
 
@@ -84,14 +89,16 @@ class GraspModule:
         #  print("Motor spinning CCW")
         self.dir.value = True
         # experimentally 3 seems right
-        for i in range(3*200):
+        steps = 3*200
+        for i in range(steps):
             self.single_step(0.005)
         # stop motor
         self.step.value = False
     
     def done_remove_cap(self):
         self.dir.value = False
-        for i in range(3*200):
+        steps = 1.5*200
+        for i in range(steps):
             self.single_step(0.005)
         self.step.value = False
     
