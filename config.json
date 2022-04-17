@@ -25,7 +25,8 @@
     "align": {
         "ena_pin": "board.GP7",
         "dir1_pin": "board.GP5",
-        "dir2_pin": "board.GP6"
+        "dir2_pin": "board.GP6",
+        
     },
 
 

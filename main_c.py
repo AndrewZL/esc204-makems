@@ -45,26 +45,27 @@ def main():
 
     # every step in the process requires "present" from the responder 
     
-    # present()
-    # align.load(50000)
-
-    # present()
+    present(uart)
+    align.load(50000)
+    print("aligned")
+    
+    present(uart)
     grasper.close(45000)
     print("closed")
 
-    # present()
+    present(uart)
     grasper.remove_cap()
     print("cap removed")
 
-    # present()
+    present(uart)
     grasper.done_remove_cap()
     print("allowing cap to fall")
 
-    # present()
+    present(uart)
     grasper.open(45000)
     print("opened")
 
-    # present()
+    present(uart)
     uart.write(bytearray('z'))
     print('Bottle Done Pre-Processing, Begin Scan')
 
@@ -73,7 +74,8 @@ def main():
         time.sleep(5)
         message = comm.read(uart)
 
-    align.unload()
+    align.unload(50000)
+    
     
 
 if __name__ == '__main__':

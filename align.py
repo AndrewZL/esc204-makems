@@ -14,9 +14,11 @@ class AlignModule:
     def load(self, speed):
         self.in1.value, self.in2.value = (True, False)
         self.ena.duty_cycle = speed
-        time.sleep(1)
+        time.sleep(5)
+        self.ena.duty_cycle = 0
 
-    def unload(self):
+    def unload(self,speed):
         self.in1.value, self.in2.value = (False, True)
-        self.ena.duty_cycle = 5000
-        time.sleep(1)
+        self.ena.duty_cycle = speed
+        time.sleep(5)
+        self.ena.duty_cycle = 0
