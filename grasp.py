@@ -78,6 +78,7 @@ class GraspModule:
         self.ena.duty_cycle = target_speed
         time.sleep(0.05 * 10) # give time for motor to come to speed
         target_encoder_speed = abs((self.encoder.position - self.last_position)/10)
+        speed = target_encoder_speed
         while(self.encoder.position) < self.last_position * 2 and speed > target_encoder_speed * 0.01:
             print(self.encoder.position, self.last_position)
             speed = abs(self.encoder.position - self.last_position)
